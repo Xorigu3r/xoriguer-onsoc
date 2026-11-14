@@ -11,7 +11,7 @@
  * Idiomes: i18n.js + traduccions.js (la clau és el text català). Text nou -> fila nova a traduccions.js.
  */
 'use strict';
-const VERSIO = '1.2';
+const VERSIO = '1.3';
 
 // ---------- idioma ----------
 const T_ = (s, v) => (typeof I18N !== 'undefined' ? I18N.t(s, v)
@@ -113,6 +113,14 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 const telNet = (t) => String(t || '').replace(/[^\d+]/g, '');
 const nouId = () => (globalThis.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()).replace(/-/g, '').slice(0, 20);
 const teFitxa = (f) => !!(f && Object.values(f).some((v) => String(v || '').trim()));
+// Enllaç de «Compartir ubicació» de Google Maps (per als iPhone, que amb la web no envien en segon pla).
+// Només acceptem adreces de Google Maps: evita que algú hi posi un enllaç qualsevol.
+function enllacGmaps(u) {
+  const s = String(u || '').trim();
+  return /^https:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|(www\.)?google\.[a-z.]+\/maps|maps\.google\.[a-z.]+)\/\S*$/i.test(s) ? s : '';
+}
+// Membre que fa servir la web: només envia la ubicació quan té l'app oberta
+const esWeb = (m) => String(m.plat || '').startsWith('web');
 
 // ---------- estat ----------
 const $ = (id) => document.getElementById(id);
@@ -122,6 +130,10 @@ const llegeix = (k, def) => { try { const v = localStorage.getItem('onsoc.' + k)
 const Cap = typeof window !== 'undefined' ? window.Capacitor : null;
 const NATIU = !!(Cap && Cap.isNativePlatform && Cap.isNativePlatform());
 const PLATAFORMA = Cap && Cap.getPlatform ? Cap.getPlatform() : 'web';
+const IPHONE_WEB = !NATIU && typeof navigator !== 'undefined' &&
+  (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+const INSTALLADA = typeof window !== 'undefined' && !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || navigator.standalone);
+const PLAT = NATIU ? PLATAFORMA : (IPHONE_WEB ? 'web-ios' : 'web');
 const BG = NATIU ? Cap.registerPlugin('BackgroundGeolocation') : null;
 const Avisos = NATIU ? Cap.registerPlugin('LocalNotifications') : null;
 const Dispositiu = NATIU ? Cap.registerPlugin('Device') : null;
@@ -212,7 +224,8 @@ function escoltaTot() {
 async function envia(extra = {}) {
   if (!fam || !perfil) return;
   const dades = { nom: perfil.nom, tel: perfil.tel || '', color: perfil.color, sos: sosMeu || 0, pausa: !comparteixo, v: VERSIO,
-    acomp: acomp ? { desti: acomp.desti, fins: acomp.fins } : null, fitxa: teFitxa(perfil.fitxa) ? perfil.fitxa : null, ...extra };
+    acomp: acomp ? { desti: acomp.desti, fins: acomp.fins } : null, fitxa: teFitxa(perfil.fitxa) ? perfil.fitxa : null,
+    gmaps: enllacGmaps(perfil.gmaps) || null, plat: PLAT, ...extra };
   if (comparteixo && jo) Object.assign(dades, { lat: jo.lat, lng: jo.lng, acc: jo.acc, tp: jo.t });
   try {
     const bat = await bateria();
@@ -320,9 +333,12 @@ const ETIQUETES = { sos: 'rotating_light', tard: 'rotating_light', arriba: 'hous
 function enviaNtfy(e) {
   if (!ntfyEnvia || !fam) return;
   const urgent = URGENTS.has(e.tipus);
-  const baixa = ['bateria', 'acomp', 'demana', 'enllacfi'].includes(e.tipus);
+  // «On ets?» a algú que fa servir la web (iPhone): l'avís ha de sonar i, en tocar-lo, obrir On Sóc perquè enviï la posició
+  const aWeb = e.tipus === 'demana' && membres[e.a] && esWeb(membres[e.a]);
+  const baixa = ['bateria', 'acomp', 'demana', 'enllacfi'].includes(e.tipus) && !aWeb;
   const cos = { topic: fam.tema, title: urgent ? T_('SOS: {n}', { n: e.nom }) : 'On Sóc', message: textEvent(e),
-    priority: urgent ? 5 : (baixa ? 2 : 3), tags: [ETIQUETES[e.tipus] || 'round_pushpin'] };
+    priority: urgent ? 5 : aWeb ? 4 : (baixa ? 2 : 3), tags: [ETIQUETES[e.tipus] || 'round_pushpin'] };
+  if (aWeb) { cos.click = window.ONSOC_WEB; cos.message += ' — ' + T_('Toca aquí per obrir On Sóc i enviar-la.'); }
   fetch(window.ONSOC_NTFY || 'https://ntfy.sh/', { method: 'POST', body: JSON.stringify(cos) }).catch(() => {});
 }
 
@@ -609,7 +625,8 @@ function comprovaTardAltres() {
 function comprovaInactius() {
   if (!inactiuH) return;
   for (const m of Object.values(membres)) {
-    if (m.id === perfil.id || m.pausa || !esInactiu(m.vist, inactiuH)) continue;
+    // els de la web (iPhone) només envien amb l'app oberta: «no en sabem res» seria normal cada dia
+    if (m.id === perfil.id || m.pausa || esWeb(m) || !esInactiu(m.vist, inactiuH)) continue;
     if (avisatsInactiu[m.id] === m.vist) continue;
     avisatsInactiu[m.id] = m.vist; desa('avisatsInactiu', avisatsInactiu);
     vibra([300, 150, 300]);
@@ -987,16 +1004,23 @@ function fila(m, ara) {
       ? T_("⚠ No ha arribat a {l} · havia d'arribar a les {h}", { l: m.acomp.desti, h: textHora(m.acomp.fins) })
       : T_('🚶 Va cap a {l} · abans de les {h}', { l: m.acomp.desti, h: textHora(m.acomp.fins) }))}</small>`);
   }
-  if (!soc && !m.pausa && esInactiu(m.vist, inactiuH, ara)) {
+  const web = esWeb(m), gm = enllacGmaps(m.gmaps);
+  if (!soc && !m.pausa && !web && esInactiu(m.vist, inactiuH, ara)) {
     notes.push(`<small class="error">${esc(T_('⚠ Fa {h} h que no en sabem res', { h: Math.floor((ara - m.vist) / 3600e3) }))}</small>`);
+  }
+  if (!soc && web && vell) {
+    notes.push(`<small class="web">${esc(gm ? T_("📱 Fa servir la web: només s'actualitza quan obre On Sóc. Ara, mira'l a Google Maps.")
+      : T_("📱 Fa servir la web: només s'actualitza quan obre On Sóc."))}</small>`);
   }
   if (demanats[m.id]) {
     if (m.vist >= demanats[m.id]) delete demanats[m.id];
     else if (ara - demanats[m.id] < DEMANA_ESPERA_S * 1000) notes.push(`<small class="cami">${esc(T_('⏳ Demanat, esperant resposta…'))}</small>`);
-    else notes.push(`<small class="error">${esc(T_('No respon: potser té el mòbil apagat o sense connexió.'))}</small>`);
+    else notes.push(`<small class="error">${esc(web ? T_("Encara no ha obert On Sóc. Mira'l a Google Maps o truca-li.")
+      : T_('No respon: potser té el mòbil apagat o sense connexió.'))}</small>`);
   }
   const t = telNet(m.tel);
   const botons = [];
+  if (!soc && gm) botons.push(`<a class="boto${web ? ' gmaps' : ''}" href="${esc(gm)}" target="_blank" rel="noopener">Google Maps</a>`);
   if (m.lat != null && !m.pausa) botons.push(`<button data-centra="${esc(m.id)}">${esc(T_('Mapa'))}</button>`);
   if (!soc) botons.push(`<button data-demana="${esc(m.id)}">${esc(T_('On ets?'))}</button>`);
   botons.push(`<button data-rec="${esc(m.id)}">${esc(T_('Recorregut'))}</button>`);
@@ -1005,7 +1029,7 @@ function fila(m, ara) {
   if (!soc && t) botons.push(`<a class="boto" href="tel:${esc(t)}">${esc(T_('Truca'))}</a>`);
   return `<li class="membre${sos ? ' en-sos' : ''}">
     <span class="membre-color" style="background:${esc(m.color)};${vell ? 'filter:grayscale(.8)' : ''}">${esc(inicial(m.nom))}</span>
-    <div class="membre-info"><b>${esc(m.nom)}${soc ? ' ' + esc(T_('(tu)')) : ''}${sos ? ' — SOS!' : ''}</b><small>${esc(parts.join(' · '))}${vell && !m.pausa && m.lat != null ? ' · ' + esc(T_('sense senyal recent')) : ''}</small>${notes.join('')}</div>
+    <div class="membre-info"><b>${esc(m.nom)}${soc ? ' ' + esc(T_('(tu)')) : ''}${sos ? ' — SOS!' : ''}</b><small>${esc(parts.join(' · '))}${vell && !web && !m.pausa && m.lat != null ? ' · ' + esc(T_('sense senyal recent')) : ''}</small>${notes.join('')}</div>
     <div class="membre-botons">${botons.join('')}</div></li>`;
 }
 
@@ -1115,12 +1139,17 @@ function pintaFamilia() {
   $('n-rebo').checked = ntfyRebo;
   $('f-nom').value = perfil.nom;
   $('f-tel').value = perfil.tel || '';
+  $('f-gmaps').value = perfil.gmaps || '';
   let color = perfil.color;
   selectorColors($('f-colors'), color, (c) => (color = c));
   $('f-desa').onclick = () => {
     const nom = $('f-nom').value.trim();
     if (!nom) return;
-    perfil = { ...perfil, nom, tel: $('f-tel').value.trim(), color };
+    const gmTxt = $('f-gmaps').value.trim(), gm = enllacGmaps(gmTxt);
+    $('f-gmaps-error').hidden = !gmTxt || !!gm;
+    if (gmTxt && !gm) { $('f-gmaps').focus(); return; }
+    perfil = { ...perfil, nom, tel: $('f-tel').value.trim(), color, gmaps: gm };
+    $('avis-iphone').hidden = !(IPHONE_WEB && !gm);
     desa('perfil', perfil);
     envia(); pinta();
     $('f-desat').hidden = false; setTimeout(() => ($('f-desat').hidden = true), 1500);
@@ -1129,6 +1158,10 @@ function pintaFamilia() {
   pintaInactiu();
   pintaFitxaPropia();
   $('f-android').hidden = !(NATIU && PLATAFORMA === 'android');
+  $('f-iphone').hidden = !IPHONE_WEB;
+  $('f-iphone-inici').hidden = INSTALLADA;
+  // a l'iPhone (web), si encara no ha posat l'enllaç de Google Maps, un recordatori al mapa
+  $('avis-iphone').hidden = !(IPHONE_WEB && !enllacGmaps(perfil.gmaps));
   $('versio').textContent = `Xoriguer On Sóc ${VERSIO} · ${NATIU ? PLATAFORMA : 'web'}`;
 }
 
@@ -1166,6 +1199,7 @@ function preparaControls() {
   $('f-idioma').value = llegeix('idioma', '');
   $('f-idioma').onchange = (e) => { desa('idioma', e.target.value); location.reload(); };
   $('m-desa').onclick = desaFitxa;
+  $('avis-iphone-boto').onclick = () => { mostraVista('v-familia'); $('f-iphone').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   $('df-tanca').onclick = () => $('dialeg-fitxa').close();
   $('n-copia').onclick = () => copia($('n-copia'), fam.tema);
   $('n-obre').onclick = () => { location.href = `ntfy://ntfy.sh/${fam.tema}`; };
@@ -1250,4 +1284,4 @@ if (typeof document !== 'undefined' && document.getElementById('mapa')) {
   });
   if (!NATIU && 'serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 }
-if (typeof module !== 'undefined') module.exports = { distanciaM, textDistancia, textFa, calEnviar, calHistoric, estatLloc, esInactiu, diaLocal, textEvent };
+if (typeof module !== 'undefined') module.exports = { distanciaM, textDistancia, textFa, calEnviar, calHistoric, estatLloc, esInactiu, diaLocal, textEvent, enllacGmaps };

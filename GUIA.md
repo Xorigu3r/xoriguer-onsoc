@@ -92,7 +92,23 @@ Primer cop:
 | **Fitxa mèdica** (1.2) | Pestanya Família. Surt amb l'SOS (botó «Fitxa») i a cada membre, amb botó per trucar al contacte d'emergència |
 | **Idiomes** (1.2) | Català, castellà, francès i anglès (automàtic o a la pestanya Família) |
 
-## 3. iPhone — el que cal saber
+## 3. iPhone — el que fem (decidit el 14/11/2026): web + ntfy + Google Maps
+
+Gratis i sense res que caduqui. Cada iPhone:
+
+1. Obre **https://xorigu3r.github.io/xoriguer-onsoc/** a Safari → Comparteix → «Afegeix a la pantalla d'inici».
+   Entra a la família amb el codi.
+2. Instal·la **ntfy** (App Store) i s'hi subscriu al tema de la família (pestanya Família). Així rep els avisos i l'SOS
+   amb l'app tancada, i quan algú li demana «On ets?» li sona un avís: en tocar-lo s'obre On Sóc i envia on és.
+3. A **Google Maps**: la seva foto → Compartir la ubicació → «Fins que ho desactivis» → compartir amb un enllaç → copiar-lo,
+   i enganxar-lo a «Enllaç de Google Maps» del perfil d'On Sóc. La resta de la família hi veu un botó blau **Google Maps**
+   per veure'l en directe encara que no hagi obert On Sóc.
+
+Què canvia per als de la web: només envien la ubicació (i els llocs, l'acompanya'm, el recorregut) amb On Sóc obert;
+no se'ls aplica l'avís de «fa massa que no en sabem res» (seria normal cada dia) i a la llista hi surt «📱 Fa servir la web».
+SOS, «estic bé», fitxa mèdica, veure la família i rebre avisos: tot igual.
+
+### Altres camins (si mai voleu l'app de veritat a l'iPhone)
 
 Amb l'iPhone **no hi ha un «APK»** que es pugui enviar i instal·lar. Hi ha tres camins:
 
@@ -112,8 +128,8 @@ npx cap open ios
 
 A Xcode: Signing & Capabilities → tria el teu equip (Apple ID) → connecta l'iPhone → ▶.
 
-Recomanació pràctica: si a casa els iPhone són pocs, comença amb la **PWA** (gratis, avui mateix) i, si cal que
-funcioni amb l'app tancada, el compte de desenvolupador.
+Gratis i sense caducar **no es pot**: botigues de la UE, certificats «enterprise», TrollStore o jailbreak no serveixen
+(cal el compte de 99 $, els anul·len, o només van en iOS antics).
 
 ## Límits (sincerament)
 

@@ -64,3 +64,13 @@ const xe = await C.xifra(ce, { nom: 'Pare', lat: 1 });
 assert.deepEqual(await C.desxifra(await C.clauEnllac(en.text), xe), { nom: 'Pare', lat: 1 });
 assert.equal(await C.desxifra(f.clau, xe), null, 'la clau de família no obre l\'enllaç');
 console.log('Proves 1.2 OK');
+
+// 1.3: enllaç de Google Maps
+const { enllacGmaps } = require('./www/app.js');
+assert.equal(enllacGmaps(' https://maps.app.goo.gl/AbC123 '), 'https://maps.app.goo.gl/AbC123');
+assert.equal(enllacGmaps('https://www.google.com/maps/@41.3,2.1,15z'), 'https://www.google.com/maps/@41.3,2.1,15z');
+assert.equal(enllacGmaps('https://maps.google.es/maps?q=1'), 'https://maps.google.es/maps?q=1');
+assert.equal(enllacGmaps('https://estafa.com/maps.app.goo.gl/x'), '');
+assert.equal(enllacGmaps('javascript:alert(1)'), '');
+assert.equal(enllacGmaps('http://maps.app.goo.gl/x'), '', 'només https');
+console.log('Proves 1.3 OK');

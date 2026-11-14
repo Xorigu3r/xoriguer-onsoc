@@ -84,6 +84,11 @@
         <p><button id="avis-permis-boto" class="primari">Activa la ubicació</button></p>
       </div>
 
+      <div id="avis-iphone" class="targeta avis" hidden>
+        <p><b>Ets en un iPhone.</b> On Sóc només envia on ets mentre la tens oberta. Perquè la família et trobi sempre, posa-hi també Google Maps i ntfy.</p>
+        <p><button id="avis-iphone-boto" class="primari">Com es fa</button></p>
+      </div>
+
       <div id="recorregut" class="targeta recorregut" hidden>
         <div class="fila-titol"><h2 id="rec-titol">Recorregut</h2><button id="rec-tanca" class="discret">Tanca</button></div>
         <div id="rec-dies" class="xips"></div>
@@ -170,6 +175,19 @@
 
     <!-- FAMÍLIA -->
     <section id="v-familia" class="vista">
+      <div class="targeta avis" id="f-iphone" hidden>
+        <h2>Si fas servir un iPhone</h2>
+        <p class="suau petit">A l'iPhone, On Sóc funciona com a web: <b>només envia on ets mentre la tens oberta</b> (Apple no deixa fer-ho a les webs en segon pla).
+          Perquè la família et trobi sempre, fes aquests tres passos:</p>
+        <ol class="passos-num">
+          <li id="f-iphone-inici"><b>Afegeix On Sóc a la pantalla d'inici</b>: a Safari, botó Comparteix → «Afegeix a la pantalla d'inici».</li>
+          <li><b>Instal·la ntfy</b> i subscriu-te al tema de la família (aquí sota): així reps els avisos i l'SOS amb l'app tancada.</li>
+          <li><b>Comparteix la ubicació amb Google Maps</b>: Google Maps → la teva foto → Compartir la ubicació → «Fins que ho desactivis» →
+            comparteix-la amb un enllaç i <b>copia'l</b>. Enganxa'l a «Enllaç de Google Maps» del teu perfil. La família tindrà un botó per veure't en directe.</li>
+        </ol>
+        <p class="suau petit">I quan algú et demani «On ets?», toca l'avís de ntfy: s'obrirà On Sóc i enviarà on ets.</p>
+      </div>
+
       <div class="targeta">
         <h2>Codi de la família</h2>
         <p class="suau petit">Passa'l <b>només</b> als de casa: qui el té us veu a tots. Escriu-lo a l'app de l'altre mòbil, a «Uneix-me».</p>
@@ -231,6 +249,8 @@
         <h2>El meu perfil</h2>
         <label class="camp">Nom<input id="f-nom" maxlength="24"></label>
         <label class="camp">Telèfon<input id="f-tel" type="tel" maxlength="20"></label>
+        <label class="camp">Enllaç de Google Maps <small>(opcional; sobretot per als iPhone)</small><input id="f-gmaps" type="url" maxlength="300" placeholder="https://maps.app.goo.gl/..." autocomplete="off" spellcheck="false"></label>
+        <p id="f-gmaps-error" class="error petit" hidden>Ha de ser un enllaç de Google Maps (https://maps.app.goo.gl/...).</p>
         <div class="camp">Color<div id="f-colors" class="colors"></div></div>
         <p><button id="f-desa" class="primari">Desa</button> <span id="f-desat" class="suau petit" hidden>Desat</span></p>
       </div>
