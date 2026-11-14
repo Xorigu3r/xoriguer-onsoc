@@ -316,6 +316,26 @@
       '<b>You’re on an iPhone.</b> On Sóc only sends your location while it’s open. So your family can always find you, also set up Google Maps and ntfy.'],
     ['Com es fa', 'Cómo se hace', 'Comment faire', 'How to do it'],
 
+    // ---------- 1.4: Opcions, actualitzacions ----------
+    ['Opcions', 'Opciones', 'Options', 'Options'],
+    ['Actualitzacions', 'Actualizaciones', 'Mises à jour', 'Updates'],
+    ['Busca actualitzacions', 'Buscar actualizaciones', 'Rechercher des mises à jour', 'Check for updates'],
+    ['Baixa la versió nova', 'Descargar la versión nueva', 'Télécharger la nouvelle version', 'Download the new version'],
+    ['Baixa-la', 'Descargarla', 'La télécharger', 'Download it'],
+    ['Ara no', 'Ahora no', 'Pas maintenant', 'Not now'],
+    ["La web s'actualitza sola: quan l'obres amb connexió ja tens la darrera versió.", 'La web se actualiza sola: cuando la abres con conexión ya tienes la última versión.', 'La version web se met à jour toute seule : en l’ouvrant avec une connexion, vous avez la dernière version.', 'The web version updates itself: when you open it online you already have the latest version.'],
+    ['Buscant...', 'Buscando...', 'Recherche...', 'Checking...'],
+    ["No s'ha pogut comprovar (sense connexió?)", 'No se ha podido comprobar (¿sin conexión?)', 'Vérification impossible (pas de connexion ?)', 'Couldn’t check (no connection?)'],
+    ['Ja tens la darrera versió ({v}).', 'Ya tienes la última versión ({v}).', 'Vous avez déjà la dernière version ({v}).', 'You already have the latest version ({v}).'],
+    ['Hi ha la versió {v}. Baixa-la i instal·la-la per sobre: no es perd res.', 'Hay la versión {v}. Descárgala e instálala encima: no se pierde nada.', 'La version {v} est disponible. Téléchargez-la et installez-la par-dessus : rien n’est perdu.', 'Version {v} is available. Download it and install it over this one: nothing is lost.'],
+    ["Hi ha una versió nova d'On Sóc ({v}).", 'Hay una versión nueva de On Sóc ({v}).', 'Une nouvelle version d’On Sóc est disponible ({v}).', 'A new version of On Sóc is available ({v}).'],
+    ['Tens la versió {v}.', 'Tienes la versión {v}.', 'Vous avez la version {v}.', 'You have version {v}.'],
+    ['Versió web {v}.', 'Versión web {v}.', 'Version web {v}.', 'Web version {v}.'],
+    ['<b>Instal·la ntfy</b> i subscriu-te al tema de la família (pestanya Opcions): així reps els avisos i l\'SOS amb l\'app tancada.',
+      '<b>Instala ntfy</b> y suscríbete al tema de la familia (pestaña Opciones): así recibes los avisos y el SOS con la app cerrada.',
+      '<b>Installez ntfy</b> et abonnez-vous au sujet de la famille (onglet Options) : vous recevrez les alertes et le SOS appli fermée.',
+      '<b>Install ntfy</b> and subscribe to the family topic (Options tab): you’ll get alerts and SOS with the app closed.'],
+
     // ---------- pàgina de l'enllaç temporal ----------
     ['Com hi vaig', 'Cómo llego', 'Itinéraire', 'Get directions'],
     ["Ubicació compartida de manera temporal i xifrada amb Xoriguer On Sóc. L'enllaç caduca sol.", 'Ubicación compartida de forma temporal y cifrada con Xoriguer On Sóc. El enlace caduca solo.', 'Position partagée de façon temporaire et chiffrée avec Xoriguer On Sóc. Le lien expire tout seul.', 'Location shared temporarily and encrypted with Xoriguer On Sóc. The link expires on its own.'],

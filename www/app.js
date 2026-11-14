@@ -11,7 +11,7 @@
  * Idiomes: i18n.js + traduccions.js (la clau és el text català). Text nou -> fila nova a traduccions.js.
  */
 'use strict';
-const VERSIO = '1.3';
+const VERSIO = '1.4';
 
 // ---------- idioma ----------
 const T_ = (s, v) => (typeof I18N !== 'undefined' ? I18N.t(s, v)
@@ -1045,7 +1045,45 @@ function mostraVista(id) {
   document.querySelectorAll('#pestanyes button').forEach((b) => b.classList.toggle('activa', b.dataset.vista === id));
   if (id === 'v-mapa' && mapa) setTimeout(() => mapa.invalidateSize(), 50);
   if (id === 'v-llocs') preparaVistaLlocs();
-  if (id === 'v-familia') pintaSms();
+  if (id === 'v-opcions') pintaSms();
+  window.scrollTo(0, 0);
+}
+
+// ---------- actualitzacions ----------
+// L'APK mira les Releases de GitHub (també les «prerelease»); la web s'actualitza sola amb el service worker.
+const RELEASES = 'https://api.github.com/repos/Xorigu3r/xoriguer-onsoc/releases?per_page=5';
+function versioMesNova(a, b) { // a > b ?
+  const pa = String(a).split('.').map((x) => parseInt(x, 10) || 0), pb = String(b).split('.').map((x) => parseInt(x, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0);
+  return false;
+}
+async function buscaActualitzacio(manual) {
+  const res = $('o-versio-res');
+  const diu = (t) => { if (manual) { res.textContent = t; res.hidden = false; } };
+  if (!NATIU) {
+    diu(T_("La web s'actualitza sola: quan l'obres amb connexió ja tens la darrera versió."));
+    if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then((r) => r && r.update()).catch(() => {});
+    return;
+  }
+  if (!manual && Date.now() - llegeix('ultimaCerca', 0) < 20 * 3600e3) return; // un cop al dia
+  if (manual) diu(T_('Buscant...'));
+  try {
+    const llista = await (await fetch(RELEASES, { headers: { Accept: 'application/vnd.github+json' } })).json();
+    desa('ultimaCerca', Date.now());
+    const r = (Array.isArray(llista) ? llista : []).find((x) => !x.draft && /^v?\d/.test(x.tag_name || ''));
+    if (!r) { diu(T_("No s'ha pogut comprovar (sense connexió?)")); return; }
+    const versio = r.tag_name.replace(/^v/, '');
+    const apk = (r.assets || []).find((a) => /\.apk$/i.test(a.name));
+    if (!versioMesNova(versio, VERSIO) || !apk) { diu(T_('Ja tens la darrera versió ({v}).', { v: VERSIO })); return; }
+    $('o-baixa').href = apk.browser_download_url; $('o-baixa').hidden = false;
+    diu(T_('Hi ha la versió {v}. Baixa-la i instal·la-la per sobre: no es perd res.', { v: versio }));
+    if (manual || llegeix('versioTancada', '') !== versio) {
+      $('avis-versio-text').textContent = T_("Hi ha una versió nova d'On Sóc ({v}).", { v: versio });
+      $('avis-versio-baixa').href = apk.browser_download_url;
+      $('avis-versio').hidden = false;
+      $('avis-versio-tanca').onclick = () => { desa('versioTancada', versio); $('avis-versio').hidden = true; };
+    }
+  } catch { diu(T_("No s'ha pogut comprovar (sense connexió?)")); }
 }
 
 function selectorColors(cont, triat, enCanvi) {
@@ -1163,6 +1201,8 @@ function pintaFamilia() {
   // a l'iPhone (web), si encara no ha posat l'enllaç de Google Maps, un recordatori al mapa
   $('avis-iphone').hidden = !(IPHONE_WEB && !enllacGmaps(perfil.gmaps));
   $('versio').textContent = `Xoriguer On Sóc ${VERSIO} · ${NATIU ? PLATAFORMA : 'web'}`;
+  $('o-versio-text').textContent = NATIU ? T_('Tens la versió {v}.', { v: VERSIO }) : T_('Versió web {v}.', { v: VERSIO });
+  buscaActualitzacio(false);
 }
 
 async function copia(boto, text) {
@@ -1196,8 +1236,11 @@ function preparaControls() {
   $('f-avisos').onclick = async () => {
     if (Avisos) { const r = await Avisos.requestPermissions().catch(() => null); if (r && r.display === 'granted') $('f-avisos').textContent = T_('Fet'); }
   };
-  $('f-idioma').value = llegeix('idioma', '');
-  $('f-idioma').onchange = (e) => { desa('idioma', e.target.value); location.reload(); };
+  for (const id of ['f-idioma', 'b-idioma']) {
+    $(id).value = llegeix('idioma', '');
+    $(id).onchange = (e) => { desa('idioma', e.target.value); location.reload(); };
+  }
+  $('o-busca').onclick = () => buscaActualitzacio(true);
   $('m-desa').onclick = desaFitxa;
   $('avis-iphone-boto').onclick = () => { mostraVista('v-familia'); $('f-iphone').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   $('df-tanca').onclick = () => $('dialeg-fitxa').close();

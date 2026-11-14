@@ -11,6 +11,8 @@
 
   function delSistema() {
     const ll = (typeof navigator !== 'undefined' && (navigator.languages || [navigator.language])) || [];
+    // On Sóc: si el català hi és en qualsevol posició (p. ex. mòbil en castellà amb el català com a 2a llengua), català
+    if (ll.some((x) => String(x || '').toLowerCase().split('-')[0] === 'ca')) return 'ca';
     for (const x of ll) {
       const s = String(x || '').toLowerCase().split('-')[0];
       if (s === 'ca') return 'ca';

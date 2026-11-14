@@ -62,6 +62,11 @@
           Només qui té el codi us veu.</p>
       </div>
       <div class="targeta">
+        <label class="camp">Idioma <select id="b-idioma" data-no-t>
+          <option value="">Automàtic · Auto</option><option value="ca">Català</option><option value="es">Español</option><option value="fr">Français</option><option value="en">English</option>
+        </select></label>
+      </div>
+      <div class="targeta">
         <h2>Qui ets?</h2>
         <label class="camp">Nom<input id="b-nom" maxlength="24" placeholder="p. ex. Mama" autocomplete="given-name"></label>
         <label class="camp">Telèfon <small>(opcional, perquè et puguin trucar i per a l'SMS d'SOS)</small><input id="b-tel" type="tel" maxlength="20" placeholder="600 000 000" autocomplete="tel"></label>
@@ -84,6 +89,10 @@
         <p><button id="avis-permis-boto" class="primari">Activa la ubicació</button></p>
       </div>
 
+      <div id="avis-versio" class="targeta avis" hidden>
+        <p id="avis-versio-text"></p>
+        <p class="fila"><a id="avis-versio-baixa" class="boto primari-enllac" target="_blank" rel="noopener">Baixa-la</a><button id="avis-versio-tanca" class="discret">Ara no</button></p>
+      </div>
       <div id="avis-iphone" class="targeta avis" hidden>
         <p><b>Ets en un iPhone.</b> On Sóc només envia on ets mentre la tens oberta. Perquè la família et trobi sempre, posa-hi també Google Maps i ntfy.</p>
         <p><button id="avis-iphone-boto" class="primari">Com es fa</button></p>
@@ -181,7 +190,7 @@
           Perquè la família et trobi sempre, fes aquests tres passos:</p>
         <ol class="passos-num">
           <li id="f-iphone-inici"><b>Afegeix On Sóc a la pantalla d'inici</b>: a Safari, botó Comparteix → «Afegeix a la pantalla d'inici».</li>
-          <li><b>Instal·la ntfy</b> i subscriu-te al tema de la família (aquí sota): així reps els avisos i l'SOS amb l'app tancada.</li>
+          <li><b>Instal·la ntfy</b> i subscriu-te al tema de la família (pestanya Opcions): així reps els avisos i l'SOS amb l'app tancada.</li>
           <li><b>Comparteix la ubicació amb Google Maps</b>: Google Maps → la teva foto → Compartir la ubicació → «Fins que ho desactivis» →
             comparteix-la amb un enllaç i <b>copia'l</b>. Enganxa'l a «Enllaç de Google Maps» del teu perfil. La família tindrà un botó per veure't en directe.</li>
         </ol>
@@ -194,6 +203,45 @@
         <div class="codi" id="f-codi" data-no-t></div>
         <p class="fila"><button id="f-copia">Copia</button><button id="f-comparteix">Comparteix</button><button id="f-mostra" class="discret">Amaga</button></p>
       </div>
+
+      <div class="targeta">
+        <h2>El meu perfil</h2>
+        <label class="camp">Nom<input id="f-nom" maxlength="24"></label>
+        <label class="camp">Telèfon<input id="f-tel" type="tel" maxlength="20"></label>
+        <label class="camp">Enllaç de Google Maps <small>(opcional; sobretot per als iPhone)</small><input id="f-gmaps" type="url" maxlength="300" placeholder="https://maps.app.goo.gl/..." autocomplete="off" spellcheck="false"></label>
+        <p id="f-gmaps-error" class="error petit" hidden>Ha de ser un enllaç de Google Maps (https://maps.app.goo.gl/...).</p>
+        <div class="camp">Color<div id="f-colors" class="colors"></div></div>
+        <p><button id="f-desa" class="primari">Desa</button> <span id="f-desat" class="suau petit" hidden>Desat</span></p>
+      </div>
+
+      <div class="targeta">
+        <h2>Fitxa mèdica</h2>
+        <p class="suau petit">Opcional. La família (i ningú més: va xifrada) la veu quan fas SOS, per poder-ho dir al 112.</p>
+        <label class="camp">Grup sanguini<select id="m-grup" data-no-t><option value="">—</option><option>A+</option><option>A−</option><option>B+</option><option>B−</option><option>AB+</option><option>AB−</option><option>0+</option><option>0−</option></select></label>
+        <label class="camp">Al·lèrgies<input id="m-alergies" maxlength="200" placeholder="p. ex. penicil·lina"></label>
+        <label class="camp">Medicació<input id="m-medicacio" maxlength="200" placeholder="p. ex. Sintrom 4 mg"></label>
+        <label class="camp">Malalties o altres coses a saber<input id="m-malalties" maxlength="300" placeholder="p. ex. diabetis, marcapassos"></label>
+        <label class="camp">Contacte d'emergència<input id="m-contacte" maxlength="40" placeholder="Nom"></label>
+        <label class="camp">Telèfon del contacte<input id="m-contacte-tel" type="tel" maxlength="20"></label>
+        <p><button id="m-desa" class="primari">Desa la fitxa</button> <span id="m-desat" class="suau petit" hidden>Desat</span></p>
+      </div>
+    </section>
+
+    <!-- OPCIONS -->
+    <section id="v-opcions" class="vista">
+      <div class="targeta">
+        <label class="camp">Idioma <select id="f-idioma" data-no-t>
+          <option value="">Automàtic · Auto</option><option value="ca">Català</option><option value="es">Español</option><option value="fr">Français</option><option value="en">English</option>
+        </select></label>
+      </div>
+
+      <div class="targeta">
+        <h2>Actualitzacions</h2>
+        <p class="suau petit" id="o-versio-text"></p>
+        <p class="fila"><button id="o-busca" class="primari">Busca actualitzacions</button><a id="o-baixa" class="boto" hidden target="_blank" rel="noopener">Baixa la versió nova</a></p>
+        <p class="petit" id="o-versio-res" hidden></p>
+      </div>
+
       <div class="targeta">
         <div class="fila-titol"><h2>Comparteixo la meva ubicació</h2><label class="interruptor"><input type="checkbox" id="f-comparteixo"><span></span></label></div>
         <p class="suau petit" id="f-comparteixo-text"></p>
@@ -213,13 +261,6 @@
         <div class="fila-titol linia-dalt"><div><b>Aquest mòbil ja els rep per ntfy</b><small>Així On Sóc no repeteix els avisos (l'SOS sempre surt).</small></div><label class="interruptor"><input type="checkbox" id="n-rebo"><span></span></label></div>
       </div>
 
-      <div class="targeta" id="f-sms" hidden>
-        <div class="fila-titol"><h2>SMS d'SOS</h2><label class="interruptor"><input type="checkbox" id="s-actiu"><span></span></label></div>
-        <p class="suau petit">Quan facis SOS, el mòbil també envia un <b>SMS</b> amb on ets als telèfons de la família. Arriba encara que no tinguin
-          dades ni l'app. Fa servir el teu pla de SMS.</p>
-        <p class="petit" id="s-numeros"></p>
-      </div>
-
       <div class="targeta">
         <h2>Avís de «fa massa que no en sabem res»</h2>
         <p class="suau petit">Si algú de la família porta aquestes hores sense donar senyals (mòbil apagat, sense bateria, sense cobertura...),
@@ -227,33 +268,13 @@
         <div id="i-hores" class="xips"></div>
       </div>
 
-      <div class="targeta">
-        <h2>Fitxa mèdica</h2>
-        <p class="suau petit">Opcional. La família (i ningú més: va xifrada) la veu quan fas SOS, per poder-ho dir al 112.</p>
-        <label class="camp">Grup sanguini<select id="m-grup" data-no-t><option value="">—</option><option>A+</option><option>A−</option><option>B+</option><option>B−</option><option>AB+</option><option>AB−</option><option>0+</option><option>0−</option></select></label>
-        <label class="camp">Al·lèrgies<input id="m-alergies" maxlength="200" placeholder="p. ex. penicil·lina"></label>
-        <label class="camp">Medicació<input id="m-medicacio" maxlength="200" placeholder="p. ex. Sintrom 4 mg"></label>
-        <label class="camp">Malalties o altres coses a saber<input id="m-malalties" maxlength="300" placeholder="p. ex. diabetis, marcapassos"></label>
-        <label class="camp">Contacte d'emergència<input id="m-contacte" maxlength="40" placeholder="Nom"></label>
-        <label class="camp">Telèfon del contacte<input id="m-contacte-tel" type="tel" maxlength="20"></label>
-        <p><button id="m-desa" class="primari">Desa la fitxa</button> <span id="m-desat" class="suau petit" hidden>Desat</span></p>
+      <div class="targeta" id="f-sms" hidden>
+        <div class="fila-titol"><h2>SMS d'SOS</h2><label class="interruptor"><input type="checkbox" id="s-actiu"><span></span></label></div>
+        <p class="suau petit">Quan facis SOS, el mòbil també envia un <b>SMS</b> amb on ets als telèfons de la família. Arriba encara que no tinguin
+          dades ni l'app. Fa servir el teu pla de SMS.</p>
+        <p class="petit" id="s-numeros"></p>
       </div>
 
-      <div class="targeta">
-        <label class="camp">Idioma <select id="f-idioma" data-no-t>
-          <option value="">Automàtic · Auto</option><option value="ca">Català</option><option value="es">Español</option><option value="fr">Français</option><option value="en">English</option>
-        </select></label>
-      </div>
-
-      <div class="targeta">
-        <h2>El meu perfil</h2>
-        <label class="camp">Nom<input id="f-nom" maxlength="24"></label>
-        <label class="camp">Telèfon<input id="f-tel" type="tel" maxlength="20"></label>
-        <label class="camp">Enllaç de Google Maps <small>(opcional; sobretot per als iPhone)</small><input id="f-gmaps" type="url" maxlength="300" placeholder="https://maps.app.goo.gl/..." autocomplete="off" spellcheck="false"></label>
-        <p id="f-gmaps-error" class="error petit" hidden>Ha de ser un enllaç de Google Maps (https://maps.app.goo.gl/...).</p>
-        <div class="camp">Color<div id="f-colors" class="colors"></div></div>
-        <p><button id="f-desa" class="primari">Desa</button> <span id="f-desat" class="suau petit" hidden>Desat</span></p>
-      </div>
       <div class="targeta" id="f-android" hidden>
         <h2>Perquè funcioni amb l'app tancada</h2>
         <ul class="passos">
@@ -271,12 +292,125 @@
       </div>
       <p class="suau petit centrat" id="versio" data-no-t></p>
     </section>
+
+    <!-- GUIA -->
+    <section id="v-guia" class="vista guia">
+      <h2>Guia</h2>
+      <p class="suau">Toca un apartat per obrir-lo.</p>
+
+      <details id="g-marxa">
+        <summary>🚦 Posar-la en marxa</summary>
+        <ol>
+          <li>Un de casa toca <b>Crea una família nova</b> i posa el seu nom (i el telèfon, si vol).</li>
+          <li>A la pestanya <b>Família</b> hi ha el <b>codi de la família</b>: passa'l als altres (Comparteix o Copia).</li>
+          <li>Els altres instal·len On Sóc, escriuen el codi i toquen <b>Uneix-me amb aquest codi</b>.</li>
+          <li>Doneu permís d'ubicació i d'avisos quan l'app ho demani.</li>
+        </ol>
+        <p>Qui té el codi us veu a tots: passa'l <b>només</b> als de casa.</p>
+      </details>
+      <details id="g-instal">
+        <summary>📲 Instal·lar l'APK (Android)</summary>
+        <ol>
+          <li>Baixa <b>XoriguerOnSoc.apk</b> des de la pàgina de descàrregues i obre el fitxer.</li>
+          <li>Si diu que no es poden instal·lar apps d'aquest origen: <b>Configuració</b> → activa <b>Permet d'aquesta font</b>.</li>
+          <li>Si surt <b>Play Protect</b>: <b>Més detalls</b> → <b>Instal·la igualment</b>.</li>
+        </ol>
+        <p>Les versions noves s'instal·len per sobre: no es perd res.</p>
+      </details>
+      <details id="g-segon-pla">
+        <summary>🔋 Que funcioni amb l'app tancada (Android)</summary>
+        <ul>
+          <li><b>Ubicació</b>: «Permet sempre» (o «Mentre s'usa l'app»). Mentre comparteix, hi ha un avís fix a la barra: és normal i és el que la manté viva.</li>
+          <li><b>Bateria</b>: Configuració → Aplicacions → On Sóc → Bateria → <b>Sense restriccions</b>. Xiaomi, Huawei i Samsung tanquen apps si no ho fas.</li>
+          <li><b>Avisos</b>: permet-los (pestanya Opcions) i instal·la <b>ntfy</b> per rebre'ls encara que On Sóc estigui tancada.</li>
+        </ul>
+      </details>
+      <details id="g-iphone">
+        <summary>🍏 iPhone</summary>
+        <p>A l'iPhone, On Sóc va com a web: <b>només envia on ets mentre la tens oberta</b>. Per això ho combinem amb ntfy i Google Maps:</p>
+        <ol>
+          <li>Safari → botó Comparteix → <b>Afegeix a la pantalla d'inici</b>, i entra amb el codi.</li>
+          <li>Instal·la <b>ntfy</b> i subscriu-te al tema de la família (Opcions).</li>
+          <li>Google Maps → la teva foto → Compartir la ubicació → «Fins que ho desactivis» → amb un enllaç. Enganxa l'enllaç al teu perfil (Família).</li>
+        </ol>
+        <p>Quan et demanin «On ets?», toca l'avís de ntfy: s'obre On Sóc i envia on ets.</p>
+      </details>
+      <details id="g-mapa">
+        <summary>🗺️ El mapa i la família</summary>
+        <ul>
+          <li>Cada persona és una agulla amb el seu color i inicial. <b>En gris</b>: fa més de 30 min que no se'n sap res.</li>
+          <li>A la llista: on és («a Casa»), fa quant, a quina distància i la bateria.</li>
+          <li>Botons: <b>Mapa</b> (centra), <b>On ets?</b> (demana la ubicació ara), <b>Recorregut</b> (7 dies), <b>Fitxa</b> (mèdica), <b>Google Maps</b>, <b>Ruta</b> i <b>Truca</b>.</li>
+          <li>El punt de dalt a la dreta: verd = comparteixes, taronja = en pausa, vermell = hi ha un problema.</li>
+        </ul>
+      </details>
+      <details id="g-llocs">
+        <summary>🏠 Llocs</summary>
+        <ol>
+          <li>Pestanya <b>Llocs</b> → toca el mapa on és (o <b>Usa on sóc ara</b>).</li>
+          <li>Posa-li nom (Casa, Escola...) i tria la mida de la zona.</li>
+        </ol>
+        <p>Quan algú hi arriba o en surt, la resta rep un avís. Ho detecta el mòbil de qui es mou.</p>
+      </details>
+      <details id="g-acomp">
+        <summary>🚶 Acompanya'm</summary>
+        <ol>
+          <li>Toca <b>Acompanya'm</b>, tria cap a on vas i en quant de temps hi arribes.</li>
+          <li>La família veu que vas de camí. Si arribes a un lloc desat, s'acaba sol; si no, toca <b>Ja he arribat</b>.</li>
+          <li>Si passa l'hora i no dius res, el mòbil t'avisa i, <b>2 minuts després</b>, envia un SOS automàtic.</li>
+        </ol>
+      </details>
+      <details id="g-sos">
+        <summary>🆘 SOS</summary>
+        <ul>
+          <li>Mantén premut el botó <b>SOS</b> 2 segons. La família rep l'avís, veu on ets i la teva fitxa mèdica.</li>
+          <li>Android: botó <b>SOS On Sóc</b> a la persiana i drecera mantenint premuda la icona. Sempre hi ha 5 segons per cancel·lar.</li>
+          <li>Opcions → <b>SMS d'SOS</b>: també envia un SMS amb on ets, encara que no hi hagi dades.</li>
+          <li>Quan tot vagi bé, toca <b>Estic bé — treu l'avís</b>. Per a una emergència de veritat: <b>112</b>.</li>
+        </ul>
+      </details>
+      <details id="g-avisos">
+        <summary>🔔 Avisos</summary>
+        <ul>
+          <li>La família rep avisos de: SOS, arribades i sortides dels llocs, «estic bé», bateria baixa (15 %), acompanya'm i «on ets?».</li>
+          <li>Amb <b>ntfy</b> arriben encara que On Sóc estigui tancada. Hi va el nom i què ha passat, mai la ubicació.</li>
+          <li><b>«Fa massa que no en sabem res»</b> (Opcions): si algú porta X hores sense donar senyals, el teu mòbil t'avisa.</li>
+        </ul>
+      </details>
+      <details id="g-enllac">
+        <summary>🔗 Enllaç per a algú de fora</summary>
+        <p>Toca <b>Comparteix</b> al mapa i tria 1, 8 o 24 hores. Qui tingui l'enllaç et veu al navegador, sense instal·lar res. Caduca sol i el pots aturar quan vulguis.</p>
+      </details>
+      <details id="g-privadesa">
+        <summary>🔒 Privadesa</summary>
+        <ul>
+          <li>Tot el que va al servidor va <b>xifrat amb el codi de la família</b>: el servidor no sap ni noms ni llocs.</li>
+          <li>Sense comptes ni anuncis. El recorregut i els avisos s'esborren sols als 7 dies.</li>
+          <li>Pots posar la ubicació en pausa (Opcions): la família veu que has pausat, però no on ets.</li>
+          <li>Si el codi s'escampa: tothom <b>Surt de la família</b> i en creeu una de nova.</li>
+        </ul>
+      </details>
+      <details id="g-actualitza">
+        <summary>⬆️ Actualitzacions</summary>
+        <p>L'app d'Android mira sola un cop al dia si hi ha versió nova i t'avisa al mapa. També pots tocar <b>Busca actualitzacions</b> (Opcions). La web s'actualitza sola.</p>
+      </details>
+      <details id="g-problemes">
+        <summary>❓ Si alguna cosa no va</summary>
+        <ul>
+          <li><b>No em veuen</b>: mira que el punt de dalt sigui verd, el permís d'ubicació i la bateria «Sense restriccions».</li>
+          <li><b>No em surten els avisos</b>: permet els avisos (Opcions) i comprova que a ntfy estàs subscrit al tema de la família.</li>
+          <li><b>Surt en un altre idioma</b>: Opcions → Idioma.</li>
+        </ul>
+      </details>
+    </section>
   </main>
 
   <nav class="pestanyes" id="pestanyes" hidden>
     <button data-vista="v-mapa" class="activa"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Mapa</button>
     <button data-vista="v-llocs"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Llocs</button>
     <button data-vista="v-familia"><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm-8 0a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0c-.3 0-.6 0-1 .1 1.2.8 2 2 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z"/></svg>Família</button>
+    <button data-vista="v-opcions"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>Opcions</button>
+    <button data-vista="v-guia"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 17h-2v-2h2zm2.07-7.75-.9.92A3.4 3.4 0 0 0 13 15h-2v-.5a4 4 0 0 1 1.17-2.83l1.24-1.26A1.96 1.96 0 0 0 14 9a2 2 0 0 0-4 0H8a4 4 0 0 1 8 0 3.2 3.2 0 0 1-.93 2.25z"/></svg>Guia</button>
   </nav>
 
   <script src="lib/leaflet.js"></script>
@@ -284,6 +418,7 @@
   <script src="config.js"></script>
   <script src="i18n.js"></script>
   <script src="traduccions.js"></script>
+  <script src="guia-traduccions.js"></script>
   <script src="cripto.js"></script>
   <script src="app.js"></script>
 </body>

@@ -74,3 +74,11 @@ assert.equal(enllacGmaps('https://estafa.com/maps.app.goo.gl/x'), '');
 assert.equal(enllacGmaps('javascript:alert(1)'), '');
 assert.equal(enllacGmaps('http://maps.app.goo.gl/x'), '', 'només https');
 console.log('Proves 1.3 OK');
+
+// 1.4: el català té preferència si és a la llista d'idiomes del mòbil
+await import('./www/i18n.js');
+Object.defineProperty(globalThis, 'navigator', { value: { languages: ['es-ES', 'ca-ES', 'en'] }, configurable: true });
+assert.equal(globalThis.I18N.delSistema(), 'ca');
+Object.defineProperty(globalThis, 'navigator', { value: { languages: ['es-ES', 'en'] }, configurable: true });
+assert.equal(globalThis.I18N.delSistema(), 'es');
+console.log('Proves 1.4 OK');

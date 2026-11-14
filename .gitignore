@@ -6,3 +6,4 @@ android/local.properties
 .claude/
 CLAUDE.md
 __pycache__/
+regles-firebase.json
