@@ -1,0 +1,7 @@
+{
+  "appId": "cat.xoriguer.onsoc",
+  "appName": "On Sóc",
+  "webDir": "www",
+  "android": { "backgroundColor": "#1E2A3B" },
+  "ios": { "backgroundColor": "#1E2A3B", "contentInset": "never" }
+}

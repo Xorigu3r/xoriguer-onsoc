@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="capacitor_background_geolocation_notification_channel_name">Position partagée</string>
+    <string name="drecera_sos">SOS</string>
+    <string name="drecera_sos_llarg">SOS à la famille</string>
+    <string name="rajola_sos">SOS On Sóc</string>
+    <string name="rajola_sos_sub">Prévenir la famille</string>
+</resources>

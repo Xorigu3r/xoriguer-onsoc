@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icona de la drecera SOS (mantenir premuda la icona de l'app) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item><shape android:shape="oval"><solid android:color="#D9341E"/><size android:width="48dp" android:height="48dp"/></shape></item>
+    <item android:drawable="@drawable/ic_sos" android:left="10dp" android:top="10dp" android:right="10dp" android:bottom="10dp"/>
+</layer-list>

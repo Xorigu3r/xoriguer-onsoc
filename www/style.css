@@ -1,0 +1,208 @@
+/* Xoriguer On Sóc — paleta de la casa. Títols: Montserrat ExtraBold. Text: Segoe UI. */
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 800;
+  font-display: swap;
+  src: url('fonts/Montserrat-ExtraBold.ttf') format('truetype');
+}
+:root {
+  --fons: #1E2A3B;
+  --fons2: #27354A;
+  --fons3: #31405A;
+  --linia: #41506A;
+  --crema: #F6EFE2;
+  --suau: #B9B2A5;
+  --taronja: #FFA82E;
+  --taronja-fosc: #F2650F;
+  --vermell: #D9341E;
+  --verd: #4CC38A;
+  --titol: 'Montserrat', 'Segoe UI', sans-serif;
+  --text: 'Segoe UI', 'Segoe UI Variable', Selawik, Roboto, system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: #1A2533; }
+html, body { margin: 0; color: var(--crema); font-family: var(--text); font-size: 16px; line-height: 1.4; }
+body { background: linear-gradient(180deg, #24344A 0%, #1E2A3B 40%, #1A2533 100%) fixed; padding-bottom: calc(72px + env(safe-area-inset-bottom)); min-height: 100vh; }
+h1, h2, h3 { font-family: var(--titol); font-weight: 800; letter-spacing: .01em; margin: 0 0 .5em; }
+h2 { font-size: 1.2rem; }
+small { display: block; color: var(--suau); font-size: .82rem; }
+b { font-weight: 600; }
+.suau { color: var(--suau); margin: .2em 0 .8em; }
+.petit { font-size: .82rem; }
+.centrat { text-align: center; }
+button, input, select, textarea { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+/* Capçalera amb la marca */
+.cap { display: flex; align-items: center; gap: 10px; padding: calc(12px + env(safe-area-inset-top)) 16px 10px;
+  background: linear-gradient(180deg, #2A3B53, #22314A); border-bottom: 1px solid var(--linia); position: sticky; top: 0; z-index: 1000; }
+.cap-falco { width: 54px; height: 54px; object-fit: contain; }
+.marca { line-height: 1; flex: 1; min-width: 0; }
+.marca-mot { font-family: var(--titol); font-weight: 800; font-size: 30px; white-space: nowrap; color: var(--crema); }
+.marca-x { height: .795em; width: 1.258em; margin-right: -.167em; vertical-align: baseline; }
+.marca-resta { display: inline-block; transform: skewX(-11.9deg); transform-origin: 0 100%; }
+.marca-sub { font-family: var(--text); font-weight: 600; color: var(--taronja); letter-spacing: .42em; font-size: 11px; margin-top: 6px; padding-left: 2px; }
+.estat-envio { width: 12px; height: 12px; border-radius: 50%; background: var(--suau); flex: none; }
+.estat-envio.ok { background: var(--verd); box-shadow: 0 0 0 4px rgba(76,195,138,.18); }
+.estat-envio.error { background: var(--vermell); box-shadow: 0 0 0 4px rgba(217,52,30,.18); }
+.estat-envio.pausa { background: var(--taronja); }
+
+main { padding: 14px 16px; max-width: 720px; margin: 0 auto; }
+.vista { display: none; }
+.vista.activa { display: block; }
+.targeta { background: var(--fons2); border: 1px solid var(--linia); border-radius: 16px; padding: 14px; margin-bottom: 14px; }
+.targeta p { margin: .3em 0; }
+.avis { border-color: var(--taronja-fosc); background: linear-gradient(135deg, rgba(242,101,15,.16), var(--fons2)); }
+.fila-titol { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.fila-titol h2 { margin: 0; }
+.fila { display: flex; gap: 8px; flex-wrap: wrap; }
+.logo-gran { display: block; width: min(260px, 70%); margin: 0 auto 8px; border-radius: 16px; }
+.error { color: #ff8b7a; }
+
+button, .boto { background: var(--fons3); border: 1px solid var(--linia); border-radius: 12px; padding: 9px 14px; cursor: pointer;
+  text-decoration: none; color: var(--crema); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+button:active, .boto:active { transform: scale(.98); }
+button.primari { background: linear-gradient(135deg, var(--taronja), var(--taronja-fosc)); border: 0; color: #1a0d00; font-weight: 700; }
+button.discret { background: transparent; border-color: transparent; color: var(--suau); }
+button.perill { color: #ff8b7a; border-color: rgba(217,52,30,.5); background: transparent; }
+.perill-ple { background: var(--vermell); border-color: var(--vermell); color: #fff; font-weight: 700; }
+.ample { width: 100%; padding: 12px; }
+
+/* Formularis */
+.camp { display: block; margin: 10px 0; font-weight: 600; font-size: .92rem; }
+.camp small { font-weight: 400; display: inline; }
+.camp input { display: block; width: 100%; margin-top: 5px; padding: 11px 12px; background: var(--fons); border: 1px solid var(--linia);
+  border-radius: 12px; font-weight: 400; }
+.camp input:focus { outline: 2px solid var(--taronja); outline-offset: -1px; }
+#b-codi { font-family: ui-monospace, Consolas, monospace; letter-spacing: .12em; text-transform: uppercase; }
+.colors { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.colors button { width: 38px; height: 38px; border-radius: 50%; padding: 0; border: 3px solid transparent; }
+.colors button.triat { border-color: var(--crema); box-shadow: 0 0 0 2px var(--fons2) inset; }
+
+/* Interruptor */
+.interruptor { position: relative; width: 52px; height: 30px; flex: none; }
+.interruptor input { opacity: 0; width: 0; height: 0; }
+.interruptor span { position: absolute; inset: 0; background: var(--fons3); border: 1px solid var(--linia); border-radius: 30px; transition: .2s; cursor: pointer; }
+.interruptor span::after { content: ''; position: absolute; width: 22px; height: 22px; left: 3px; top: 3px; border-radius: 50%; background: var(--suau); transition: .2s; }
+.interruptor input:checked + span { background: linear-gradient(135deg, var(--taronja), var(--taronja-fosc)); border-color: transparent; }
+.interruptor input:checked + span::after { transform: translateX(22px); background: #fff; }
+
+/* Codi */
+.codi { font-family: ui-monospace, Consolas, monospace; font-size: 1.35rem; letter-spacing: .1em; text-align: center; padding: 14px 8px;
+  background: var(--fons); border: 1px dashed var(--taronja-fosc); border-radius: 12px; margin: 8px 0 10px; user-select: all; word-break: break-all; }
+.codi.amagat { filter: blur(7px); user-select: none; }
+
+/* Passos */
+.passos { list-style: none; margin: 0; padding: 0; }
+.passos li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--linia); }
+.passos li:first-child { border-top: 0; }
+.passos li > div { flex: 1; }
+
+/* Mapa */
+.mapa { height: 48vh; min-height: 260px; border-radius: 16px; overflow: hidden; border: 1px solid var(--linia); margin-bottom: 12px; background: #2A3950; }
+.leaflet-container { font-family: var(--text); }
+.leaflet-control-attribution { font-size: 10px; }
+.agulla { width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid var(--crema);
+  box-shadow: 0 3px 10px rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; }
+.agulla span { transform: rotate(45deg); font-family: var(--titol); font-weight: 800; color: #fff; font-size: 16px; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+.agulla.vell { filter: grayscale(.85); opacity: .75; }
+.agulla.alerta { border-color: #fff; animation: batec 1s infinite; }
+@keyframes batec { 0%, 100% { box-shadow: 0 0 0 0 rgba(217,52,30,.8); } 50% { box-shadow: 0 0 0 14px rgba(217,52,30,0); } }
+
+/* Llista de membres */
+.membres { list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.membre { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; background: var(--fons2); border: 1px solid var(--linia); border-radius: 14px; padding: 10px 12px; }
+.membre.en-sos { border-color: var(--vermell); background: linear-gradient(135deg, rgba(217,52,30,.25), var(--fons2)); }
+.membre-color { width: 36px; height: 36px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center;
+  font-family: var(--titol); font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.membre-info { flex: 1 1 150px; min-width: 0; }
+.membre-info b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.membre-botons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin-left: auto; }
+.membre-botons button, .membre-botons .boto { padding: 7px 10px; font-size: .84rem; white-space: nowrap; }
+.buit { text-align: center; color: var(--suau); padding: 10px; }
+
+/* SOS */
+#sos { position: relative; display: flex; margin: 8px auto 4px; width: 116px; height: 116px; border-radius: 50%; border: 0; padding: 0;
+  background: radial-gradient(circle at 35% 30%, #ff6a4f, var(--vermell) 60%, #8f1d0f); box-shadow: 0 6px 24px rgba(217,52,30,.45);
+  touch-action: none; user-select: none; -webkit-user-select: none; }
+.sos-text { position: relative; z-index: 1; margin: auto; font-family: var(--titol); font-weight: 800; font-size: 30px; color: #fff; letter-spacing: .04em; }
+.sos-anell { position: absolute; inset: -6px; border-radius: 50%;
+  background: conic-gradient(var(--crema) calc(var(--p, 0) * 1%), transparent 0); -webkit-mask: radial-gradient(circle, transparent 58px, #000 59px);
+  mask: radial-gradient(circle, transparent 58px, #000 59px); }
+.sos-ajuda { margin-bottom: 0; }
+.sos-actiu { border-color: var(--vermell); background: linear-gradient(135deg, rgba(217,52,30,.25), var(--fons2)); }
+
+/* Alerta SOS rebuda */
+.alerta-sos { position: sticky; top: calc(78px + env(safe-area-inset-top)); z-index: 999; margin: 0; padding: 12px 16px;
+  background: var(--vermell); color: #fff; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; animation: parpelleig 1.4s infinite; }
+.alerta-sos small { color: #ffe1db; }
+.alerta-text { flex: 1; min-width: 150px; }
+.alerta-botons { display: flex; gap: 6px; }
+.alerta-botons button, .alerta-botons .boto { background: rgba(0,0,0,.25); border-color: rgba(255,255,255,.4); color: #fff; }
+.alerta-botons .perill-ple { background: #fff; color: var(--vermell); }
+@keyframes parpelleig { 50% { background: #a8240f; } }
+
+/* Pestanyes */
+.pestanyes { position: fixed; left: 0; right: 0; bottom: 0; display: flex; background: rgba(30,42,59,.97); border-top: 1px solid var(--linia);
+  padding-bottom: env(safe-area-inset-bottom); z-index: 1000; backdrop-filter: blur(8px); }
+.pestanyes button { flex: 1; flex-direction: column; gap: 2px; background: none; border: 0; border-radius: 0; padding: 8px 0 10px; color: var(--suau); font-size: .78rem; }
+.pestanyes svg { width: 24px; height: 24px; fill: currentColor; }
+.pestanyes button.activa { color: var(--taronja); }
+
+/* 1.1 — llocs, acompanya'm, avisos, recorregut */
+select { display: block; width: 100%; margin-top: 5px; padding: 11px 12px; background: var(--fons); border: 1px solid var(--linia); border-radius: 12px; font-weight: 400; }
+button:disabled { opacity: .45; }
+.enllac { background: none; border: 0; padding: 0; color: var(--taronja); text-decoration: underline; font-weight: 600; }
+.xips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.xips button { padding: 7px 12px; border-radius: 20px; font-size: .88rem; font-weight: 400; }
+.xips button.triat { background: linear-gradient(135deg, var(--taronja), var(--taronja-fosc)); color: #1a0d00; border-color: transparent; font-weight: 700; }
+.boto-mapa { background: #27354A; color: #F6EFE2; padding: 6px 10px; border-radius: 8px; font-weight: 600; }
+.etiqueta-lloc { background: rgba(30,42,59,.85); color: #FFA82E; border: 0; box-shadow: none; font-weight: 700; font-size: 11px; padding: 1px 6px; border-radius: 6px; }
+.etiqueta-lloc::before { display: none; }
+.mapa-petit { height: 34vh; min-height: 220px; margin: 8px 0; }
+
+.accions { display: flex; gap: 10px; margin: 4px 0 6px; }
+.accions button { flex: 1; padding: 12px; font-weight: 600; }
+.accions svg { width: 20px; height: 20px; fill: var(--taronja); }
+.acomp-actiu { border-color: var(--taronja-fosc); background: linear-gradient(135deg, rgba(242,101,15,.18), var(--fons2)); }
+.membre-info .cami { color: var(--taronja); }
+.membre-info .error { color: #ff8b7a; font-weight: 600; }
+
+.avisos, .llocs { list-style: none; margin: 0; padding: 0; }
+.avisos li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--linia); font-size: .92rem; }
+.avisos li:first-child, .llocs li:first-child { border-top: 0; }
+.avisos li.urgent { color: #ff8b7a; font-weight: 600; }
+.punt-color { width: 12px; height: 12px; border-radius: 50%; flex: none; margin-top: 5px; }
+.llocs li { display: flex; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--linia); }
+.llocs li > div { flex: 1; min-width: 0; }
+.llocs li > svg { width: 22px; height: 22px; fill: var(--taronja); flex: none; }
+.llocs li button { padding: 7px 10px; font-size: .85rem; }
+
+.recorregut { border-color: var(--taronja-fosc); }
+.passos-num { margin: .4em 0; padding-left: 1.3em; font-size: .92rem; }
+.codi-petit { font-size: 1rem; letter-spacing: .04em; padding: 10px 8px; }
+.linia-dalt { border-top: 1px solid var(--linia); padding-top: 10px; margin-top: 10px; }
+.linia-dalt small { margin-top: 2px; }
+
+/* Compte enrere de l'SOS */
+.compte-sos { position: fixed; inset: 0; z-index: 2000; background: rgba(120,16,6,.92); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.compte-caixa { text-align: center; color: #fff; width: min(340px, 100%); }
+.compte-caixa p { margin: 8px 0; }
+.compte-num { font-family: var(--titol); font-weight: 800; font-size: 110px; line-height: 1; margin: 10px 0 20px; }
+.compte-caixa button { font-size: 1.1rem; }
+.compte-caixa #compte-cancela { background: #fff; color: #7a1206; font-weight: 700; border: 0; }
+
+/* 1.2 — enllaç temporal, fitxa mèdica, pàgina veure */
+.enllac-actiu { border-color: #2F80ED; background: linear-gradient(135deg, rgba(47,128,237,.18), var(--fons2)); }
+.accions button { padding: 12px 6px; font-size: .9rem; }
+.dialeg { background: var(--fons2); color: var(--crema); border: 1px solid var(--linia); border-radius: 18px; padding: 18px; width: min(440px, calc(100vw - 32px)); }
+.dialeg::backdrop { background: rgba(10,16,26,.6); }
+.fitxa { margin: 0 0 12px; }
+.fitxa dt { color: var(--taronja); font-size: .8rem; font-weight: 600; margin-top: 10px; }
+.fitxa dd { margin: 2px 0 0; font-size: 1.05rem; }
+body.sense-pestanyes { padding-bottom: env(safe-area-inset-bottom); }
+.mapa-gran { height: 58vh; }
+.accions { gap: 8px; }
+.accions button { flex: 1 1 0; min-width: 0; padding: 11px 4px; font-size: .86rem; white-space: nowrap; gap: 5px; }
+.accions svg { width: 18px; height: 18px; flex: none; }

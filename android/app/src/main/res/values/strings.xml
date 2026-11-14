@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">On Sóc</string>
+    <string name="title_activity_main">On Sóc</string>
+    <string name="package_name">cat.xoriguer.onsoc</string>
+    <string name="custom_url_scheme">cat.xoriguer.onsoc</string>
+    <string name="capacitor_background_geolocation_notification_channel_name">Location sharing</string>
+    <string name="drecera_sos">SOS</string>
+    <string name="drecera_sos_llarg">SOS to family</string>
+    <string name="rajola_sos">SOS On Sóc</string>
+    <string name="rajola_sos_sub">Alert your family</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Drecera en mantenir premuda la icona: SOS (amb 5 s de compte enrere a l'app) -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="sos" android:enabled="true" android:icon="@drawable/ic_sos_drecera"
+        android:shortcutShortLabel="@string/drecera_sos" android:shortcutLongLabel="@string/drecera_sos_llarg">
+        <intent android:action="android.intent.action.VIEW" android:data="cat.xoriguer.onsoc://sos"
+            android:targetPackage="cat.xoriguer.onsoc" android:targetClass="cat.xoriguer.onsoc.MainActivity" />
+    </shortcut>
+</shortcuts>

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1E2A3B">
+  <title>Xoriguer On Sóc</title>
+  <meta name="description" content="On és la família? Ubicació compartida i xifrada, avisos d'arribada i botó d'ajuda (SOS).">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="lib/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="cap">
+    <img class="cap-falco" src="icons/simbol.png" alt="">
+    <div class="marca" data-no-t>
+      <div class="marca-mot" aria-label="Xoriguer">
+        <svg class="marca-x" viewBox="0 0 242 153" aria-hidden="true"><path fill="#F6EFE2" d="M96.3,19.0 L94.7,18.0 L46.7,18.3 L50.7,25.0 L73.0,53.3 L91.3,78.7 L15.3,140.0 L0.3,151.0 L0.0,152.7 L48.3,152.7 L139.7,79.3 L136.7,73.3Z M146.3,87.0 L146.7,88.7 L130.0,109.3 L129.0,112.3 L122.7,118.7 L147.0,152.3 L195.7,152.7 L195.7,151.3 L173.7,123.3 L147.7,87.7Z"/><path fill="#FF8A00" d="M241.7,0.0 L199.3,0.0 L137.3,51.0 L137.0,52.7 L152.3,74.0Z"/><path fill="#F2650F" d="M146.7,88.3 L144.7,88.7 L109.3,118.0 L103.3,122.0 L85.7,136.7 L72.0,149.7 L76.0,148.7 L91.0,139.7 L123.0,118.0 L128.7,112.3 L129.7,109.3Z"/></svg><span class="marca-resta">ORIGUER</span>
+      </div>
+      <div class="marca-sub">ON SÓC</div>
+    </div>
+    <span id="estat-envio" class="estat-envio" title="Estat de la ubicació"></span>
+  </header>
+
+  <!-- Alerta SOS d'un altre membre -->
+  <div id="alerta-sos" class="alerta-sos" hidden>
+    <div class="alerta-text"><b id="alerta-nom"></b><small id="alerta-quan"></small></div>
+    <div class="alerta-botons">
+      <button id="alerta-veure">Veure</button>
+      <button id="alerta-fitxa" hidden>Fitxa</button>
+      <a id="alerta-truca" class="boto" hidden>Truca</a>
+      <a class="boto perill-ple" href="tel:112">112</a>
+    </div>
+  </div>
+
+  <!-- Compte enrere de l'SOS (des del botó de la persiana o de la drecera) -->
+  <div id="compte-sos" class="compte-sos" hidden>
+    <div class="compte-caixa">
+      <p>S'enviarà l'SOS a la família en</p>
+      <div id="compte-num" class="compte-num">5</div>
+      <p><button id="compte-ara" class="perill-ple ample">Envia ara</button></p>
+      <p><button id="compte-cancela" class="ample">Cancel·la</button></p>
+    </div>
+  </div>
+
+  <!-- Fitxa mèdica d'un membre -->
+  <dialog id="dialeg-fitxa" class="dialeg">
+    <h2 id="df-titol">Fitxa mèdica</h2>
+    <div id="df-cos"></div>
+    <p class="fila"><a id="df-truca" class="boto perill-ple" hidden>Truca</a><button id="df-tanca">Tanca</button></p>
+  </dialog>
+
+  <main>
+    <!-- BENVINGUDA (sense família) -->
+    <section id="v-benvinguda" class="vista">
+      <div class="targeta">
+        <img class="logo-gran" src="icons/logo-complet.png" alt="Xoriguer On Sóc">
+        <p>Mira on és la família al mapa, rep un avís quan arriben on toca i demana ajuda amb un botó si mai passa res.</p>
+        <p class="suau petit">Les ubicacions viatgen <b>xifrades</b> amb el codi de la família: el servidor no les pot llegir.
+          Només qui té el codi us veu.</p>
+      </div>
+      <div class="targeta">
+        <h2>Qui ets?</h2>
+        <label class="camp">Nom<input id="b-nom" maxlength="24" placeholder="p. ex. Mama" autocomplete="given-name"></label>
+        <label class="camp">Telèfon <small>(opcional, perquè et puguin trucar i per a l'SMS d'SOS)</small><input id="b-tel" type="tel" maxlength="20" placeholder="600 000 000" autocomplete="tel"></label>
+        <div class="camp">Color<div id="b-colors" class="colors"></div></div>
+      </div>
+      <div class="targeta">
+        <h2>Família</h2>
+        <p><button id="b-crea" class="primari ample">Crea una família nova</button></p>
+        <p class="suau petit centrat">o bé</p>
+        <label class="camp">Codi de la família<input id="b-codi" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false"></label>
+        <p><button id="b-uneix" class="ample">Uneix-me amb aquest codi</button></p>
+        <p id="b-error" class="error" hidden></p>
+      </div>
+    </section>
+
+    <!-- MAPA -->
+    <section id="v-mapa" class="vista">
+      <div id="avis-permis" class="targeta avis" hidden>
+        <p id="avis-permis-text"></p>
+        <p><button id="avis-permis-boto" class="primari">Activa la ubicació</button></p>
+      </div>
+
+      <div id="recorregut" class="targeta recorregut" hidden>
+        <div class="fila-titol"><h2 id="rec-titol">Recorregut</h2><button id="rec-tanca" class="discret">Tanca</button></div>
+        <div id="rec-dies" class="xips"></div>
+        <p id="rec-info" class="suau petit"></p>
+      </div>
+
+      <div id="mapa" class="mapa" data-no-t></div>
+
+      <!-- Acompanya'm actiu -->
+      <div id="acomp-actiu" class="targeta acomp-actiu" hidden>
+        <h2 id="acomp-titol">De camí</h2>
+        <p id="acomp-text"></p>
+        <p id="acomp-tard" class="error" hidden>Ja hauries d'haver arribat. Si no respons, en <b id="acomp-queda">2 min</b> s'avisarà la família amb un SOS.</p>
+        <p class="fila"><button id="acomp-arribat" class="primari">Ja he arribat</button><button id="acomp-mes">+10 min</button><button id="acomp-cancela" class="discret">Cancel·la</button></p>
+      </div>
+
+      <!-- Configura Acompanya'm -->
+      <div id="acomp-nou" class="targeta" hidden>
+        <h2>Acompanya'm</h2>
+        <p class="suau petit">La família veu que vas de camí. Si no arribes a temps i no dius res, s'envia un <b>SOS automàtic</b>.</p>
+        <label class="camp">Cap a on vas?<select id="acomp-desti"></select></label>
+        <div class="camp">Hi arribo en<div id="acomp-temps" class="xips"></div></div>
+        <p class="fila"><button id="acomp-comenca" class="primari">Comença</button><button id="acomp-tanca" class="discret">Tanca</button></p>
+      </div>
+
+      <!-- Enllaç temporal per a algú de fora -->
+      <div id="enllac-actiu" class="targeta enllac-actiu" hidden>
+        <h2>Enllaç per a algú de fora</h2>
+        <p id="enllac-text"></p>
+        <div class="codi codi-petit" id="enllac-url" data-no-t></div>
+        <p class="fila"><button id="enllac-copia">Copia</button><button id="enllac-comparteix" class="primari">Comparteix</button><button id="enllac-atura" class="perill">Atura</button></p>
+      </div>
+      <div id="enllac-nou" class="targeta" hidden>
+        <h2>Comparteix la ubicació amb algú de fora</h2>
+        <p class="suau petit">Un enllaç que s'obre al navegador, sense instal·lar res (un amic, el cangur, el 112...).
+          Caduca sol. La família veurà que l'has creat.</p>
+        <div class="camp">Durada<div id="enllac-durada" class="xips"></div></div>
+        <p class="fila"><button id="enllac-crea" class="primari">Crea l'enllaç</button><button id="enllac-tanca" class="discret">Tanca</button></p>
+      </div>
+
+      <ul id="membres" class="membres"></ul>
+
+      <div id="sos-actiu" class="targeta sos-actiu" hidden>
+        <h2>Has demanat ajuda</h2>
+        <p>La família veu l'avís i on ets. Es continua enviant la teva ubicació.</p>
+        <p><button id="sos-cancela" class="primari ample">Estic bé — treu l'avís</button></p>
+      </div>
+
+      <div class="accions" id="accions">
+        <button id="b-estic-be"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>Estic bé</button>
+        <button id="b-acompanya"><svg viewBox="0 0 24 24"><path d="M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2a5 5 0 0 1-4.3-2.4l-1-1.6a2 2 0 0 0-1.7-1c-.3 0-.5.1-.8.1L6 8.3V13h2V9.6z"/></svg>Acompanya'm</button>
+        <button id="b-enllac"><svg viewBox="0 0 24 24"><path d="M3.9 12a3.1 3.1 0 0 1 3.1-3.1h4V7H7a5 5 0 0 0 0 10h4v-1.9H7A3.1 3.1 0 0 1 3.9 12zM8 13h8v-2H8zm9-6h-4v1.9h4a3.1 3.1 0 0 1 0 6.2h-4V17h4a5 5 0 0 0 0-10z"/></svg>Comparteix</button>
+      </div>
+      <p id="estic-be-fet" class="suau petit centrat" hidden></p>
+
+      <button id="sos" class="sos" aria-label="SOS: mantén premut per demanar ajuda">
+        <span class="sos-anell"></span><span class="sos-text">SOS</span>
+      </button>
+      <p class="suau petit centrat sos-ajuda">Mantén premut <b>SOS</b> 2 segons per avisar la família.</p>
+
+      <div class="targeta">
+        <h2>Últims avisos</h2>
+        <ul id="avisos" class="avisos"></ul>
+      </div>
+    </section>
+
+    <!-- LLOCS -->
+    <section id="v-llocs" class="vista">
+      <div class="targeta">
+        <h2>Llocs</h2>
+        <p class="suau petit">Quan algú de la família hi arriba o en surt, la resta rep un avís. Tants llocs com vulgueu.</p>
+        <ul id="llocs" class="llocs"></ul>
+      </div>
+      <div class="targeta">
+        <h2>Afegeix un lloc</h2>
+        <p class="suau petit">Toca el mapa on és el lloc, o fes servir on ets ara.</p>
+        <div id="mapa-llocs" class="mapa mapa-petit" data-no-t></div>
+        <p><button id="l-aqui">Usa on sóc ara</button></p>
+        <label class="camp">Nom<input id="l-nom" maxlength="30" placeholder="Casa, Escola, Feina, Cal avi..."></label>
+        <div class="camp">Mida de la zona<div id="l-radi" class="xips"></div></div>
+        <p><button id="l-desa" class="primari">Desa el lloc</button> <span id="l-error" class="error petit" hidden></span></p>
+      </div>
+    </section>
+
+    <!-- FAMÍLIA -->
+    <section id="v-familia" class="vista">
+      <div class="targeta">
+        <h2>Codi de la família</h2>
+        <p class="suau petit">Passa'l <b>només</b> als de casa: qui el té us veu a tots. Escriu-lo a l'app de l'altre mòbil, a «Uneix-me».</p>
+        <div class="codi" id="f-codi" data-no-t></div>
+        <p class="fila"><button id="f-copia">Copia</button><button id="f-comparteix">Comparteix</button><button id="f-mostra" class="discret">Amaga</button></p>
+      </div>
+      <div class="targeta">
+        <div class="fila-titol"><h2>Comparteixo la meva ubicació</h2><label class="interruptor"><input type="checkbox" id="f-comparteixo"><span></span></label></div>
+        <p class="suau petit" id="f-comparteixo-text"></p>
+      </div>
+
+      <div class="targeta">
+        <h2>Avisos amb l'app tancada (ntfy)</h2>
+        <p class="suau petit">L'app gratuïta <b>ntfy</b> (Android i iPhone) rep els avisos de la família encara que On Sóc estigui tancada:
+          SOS, arribades, «estic bé», bateria baixa... Només hi va el nom i què ha passat, <b>mai la ubicació</b>.</p>
+        <ol class="passos-num">
+          <li>Instal·la <b>ntfy</b> (Play Store / App Store).</li>
+          <li>Subscriu-te al tema de la família: <button id="n-obre" class="enllac">obre'l a ntfy</button>, o a ntfy prem <b>+</b> i escriu:</li>
+        </ol>
+        <div class="codi codi-petit" id="n-tema" data-no-t></div>
+        <p class="fila"><button id="n-copia">Copia el tema</button></p>
+        <div class="fila-titol linia-dalt"><div><b>Envia avisos per ntfy</b><small>Des d'aquest mòbil, quan passa alguna cosa.</small></div><label class="interruptor"><input type="checkbox" id="n-envia"><span></span></label></div>
+        <div class="fila-titol linia-dalt"><div><b>Aquest mòbil ja els rep per ntfy</b><small>Així On Sóc no repeteix els avisos (l'SOS sempre surt).</small></div><label class="interruptor"><input type="checkbox" id="n-rebo"><span></span></label></div>
+      </div>
+
+      <div class="targeta" id="f-sms" hidden>
+        <div class="fila-titol"><h2>SMS d'SOS</h2><label class="interruptor"><input type="checkbox" id="s-actiu"><span></span></label></div>
+        <p class="suau petit">Quan facis SOS, el mòbil també envia un <b>SMS</b> amb on ets als telèfons de la família. Arriba encara que no tinguin
+          dades ni l'app. Fa servir el teu pla de SMS.</p>
+        <p class="petit" id="s-numeros"></p>
+      </div>
+
+      <div class="targeta">
+        <h2>Avís de «fa massa que no en sabem res»</h2>
+        <p class="suau petit">Si algú de la família porta aquestes hores sense donar senyals (mòbil apagat, sense bateria, sense cobertura...),
+          aquest mòbil t'avisa. Ho calcula el teu mòbil, així que funciona encara que el de l'altre estigui apagat.</p>
+        <div id="i-hores" class="xips"></div>
+      </div>
+
+      <div class="targeta">
+        <h2>Fitxa mèdica</h2>
+        <p class="suau petit">Opcional. La família (i ningú més: va xifrada) la veu quan fas SOS, per poder-ho dir al 112.</p>
+        <label class="camp">Grup sanguini<select id="m-grup" data-no-t><option value="">—</option><option>A+</option><option>A−</option><option>B+</option><option>B−</option><option>AB+</option><option>AB−</option><option>0+</option><option>0−</option></select></label>
+        <label class="camp">Al·lèrgies<input id="m-alergies" maxlength="200" placeholder="p. ex. penicil·lina"></label>
+        <label class="camp">Medicació<input id="m-medicacio" maxlength="200" placeholder="p. ex. Sintrom 4 mg"></label>
+        <label class="camp">Malalties o altres coses a saber<input id="m-malalties" maxlength="300" placeholder="p. ex. diabetis, marcapassos"></label>
+        <label class="camp">Contacte d'emergència<input id="m-contacte" maxlength="40" placeholder="Nom"></label>
+        <label class="camp">Telèfon del contacte<input id="m-contacte-tel" type="tel" maxlength="20"></label>
+        <p><button id="m-desa" class="primari">Desa la fitxa</button> <span id="m-desat" class="suau petit" hidden>Desat</span></p>
+      </div>
+
+      <div class="targeta">
+        <label class="camp">Idioma <select id="f-idioma" data-no-t>
+          <option value="">Automàtic · Auto</option><option value="ca">Català</option><option value="es">Español</option><option value="fr">Français</option><option value="en">English</option>
+        </select></label>
+      </div>
+
+      <div class="targeta">
+        <h2>El meu perfil</h2>
+        <label class="camp">Nom<input id="f-nom" maxlength="24"></label>
+        <label class="camp">Telèfon<input id="f-tel" type="tel" maxlength="20"></label>
+        <div class="camp">Color<div id="f-colors" class="colors"></div></div>
+        <p><button id="f-desa" class="primari">Desa</button> <span id="f-desat" class="suau petit" hidden>Desat</span></p>
+      </div>
+      <div class="targeta" id="f-android" hidden>
+        <h2>Perquè funcioni amb l'app tancada</h2>
+        <ul class="passos">
+          <li><div><b>Ubicació: «Permet sempre» o «Mentre s'usa l'app»</b><small>L'app manté un avís fix a la barra mentre comparteix: així Android no l'atura.</small></div></li>
+          <li><div><b>Bateria sense restriccions</b><small>Configuració → Aplicacions → On Sóc → Bateria → <b>Sense restriccions</b>. Alguns mòbils (Xiaomi, Huawei, Samsung) aturen les apps si no ho fas.</small></div></li>
+          <li><div><b>Avisos</b><small>Per veure els avisos de la família.</small></div><button id="f-avisos">Permet</button></li>
+          <li><div><b>Botó SOS a la persiana</b><small>Baixa la persiana del tot → llapis ✎ → arrossega <b>SOS On Sóc</b> a dalt. També: mantén premuda la icona de l'app → <b>SOS</b>.
+            Sempre hi ha 5 segons per cancel·lar.</small></div></li>
+        </ul>
+      </div>
+      <div class="targeta">
+        <h2>Sortir</h2>
+        <p class="suau petit">Esborra la teva ubicació del servidor i treu la família d'aquest mòbil.</p>
+        <p><button id="f-surt" class="perill">Surt de la família</button></p>
+      </div>
+      <p class="suau petit centrat" id="versio" data-no-t></p>
+    </section>
+  </main>
+
+  <nav class="pestanyes" id="pestanyes" hidden>
+    <button data-vista="v-mapa" class="activa"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Mapa</button>
+    <button data-vista="v-llocs"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Llocs</button>
+    <button data-vista="v-familia"><svg viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm-8 0a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm0 2c-2.3 0-7 1.2-7 3.5V19h14v-2.5C15 14.2 10.3 13 8 13zm8 0c-.3 0-.6 0-1 .1 1.2.8 2 2 2 3.4V19h6v-2.5c0-2.3-4.7-3.5-7-3.5z"/></svg>Família</button>
+  </nav>
+
+  <script src="lib/leaflet.js"></script>
+  <script src="capacitor.js"></script>
+  <script src="config.js"></script>
+  <script src="i18n.js"></script>
+  <script src="traduccions.js"></script>
+  <script src="cripto.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

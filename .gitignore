@@ -1,0 +1,8 @@
+node_modules/
+_site/
+.DS_Store
+XoriguerOnSoc.apk
+android/local.properties
+.claude/
+CLAUDE.md
+__pycache__/
