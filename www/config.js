@@ -4,4 +4,4 @@
 window.ONSOC_DB = 'https://botifarra-d71cc-default-rtdb.europe-west1.firebasedatabase.app';
 window.ONSOC_ARREL = 'onsoc';
 // On és publicada la web (per a l'enllaç temporal per a algú de fora: <ONSOC_WEB>veure.html#...)
-window.ONSOC_WEB = 'https://xorigu3r.github.io/xoriguer-onsoc/';
+window.ONSOC_WEB = 'https://xoriguer.dev/xoriguer-onsoc/';

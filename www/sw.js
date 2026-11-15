@@ -1,6 +1,6 @@
 // Funcionament sense connexió de la interfície (només a la versió web; l'app porta els fitxers a dins).
 // Les dades (servidor) i les rajoles del mapa sempre van per la xarxa.
-const CACHE = 'xoriguer-onsoc-v5';
+const CACHE = 'xoriguer-onsoc-v6';
 const FITXERS = ['./', 'index.html', 'style.css', 'app.js', 'cripto.js', 'config.js', 'i18n.js', 'traduccions.js', 'guia-traduccions.js', 'veure.html', 'veure.js', 'capacitor.js', 'manifest.webmanifest',
   'lib/leaflet.js', 'lib/leaflet.css', 'fonts/Montserrat-ExtraBold.ttf',
   'icons/simbol.png', 'icons/favicon.png', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/logo-complet.png'];

@@ -11,7 +11,7 @@
  * Idiomes: i18n.js + traduccions.js (la clau és el text català). Text nou -> fila nova a traduccions.js.
  */
 'use strict';
-const VERSIO = '1.4';
+const VERSIO = '1.4.1';
 
 // ---------- idioma ----------
 const T_ = (s, v) => (typeof I18N !== 'undefined' ? I18N.t(s, v)
@@ -1050,8 +1050,9 @@ function mostraVista(id) {
 }
 
 // ---------- actualitzacions ----------
-// L'APK mira les Releases de GitHub (també les «prerelease»); la web s'actualitza sola amb el service worker.
-const RELEASES = 'https://api.github.com/repos/Xorigu3r/xoriguer-onsoc/releases?per_page=5';
+// L'APK mira https://xoriguer.dev/versions/onsoc/versio.json ({versio, apk}; abans les Releases de GitHub, suspès el 14/11/2026);
+// la web s'actualitza sola amb el service worker.
+const URL_VERSIO = 'https://xoriguer.dev/versions/onsoc/versio.json';
 function versioMesNova(a, b) { // a > b ?
   const pa = String(a).split('.').map((x) => parseInt(x, 10) || 0), pb = String(b).split('.').map((x) => parseInt(x, 10) || 0);
   for (let i = 0; i < Math.max(pa.length, pb.length); i++) if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0);
@@ -1068,12 +1069,11 @@ async function buscaActualitzacio(manual) {
   if (!manual && Date.now() - llegeix('ultimaCerca', 0) < 20 * 3600e3) return; // un cop al dia
   if (manual) diu(T_('Buscant...'));
   try {
-    const llista = await (await fetch(RELEASES, { headers: { Accept: 'application/vnd.github+json' } })).json();
+    const r = await (await fetch(URL_VERSIO, { cache: 'no-store' })).json();
     desa('ultimaCerca', Date.now());
-    const r = (Array.isArray(llista) ? llista : []).find((x) => !x.draft && /^v?\d/.test(x.tag_name || ''));
-    if (!r) { diu(T_("No s'ha pogut comprovar (sense connexió?)")); return; }
-    const versio = r.tag_name.replace(/^v/, '');
-    const apk = (r.assets || []).find((a) => /\.apk$/i.test(a.name));
+    if (!r || !r.versio) { diu(T_("No s'ha pogut comprovar (sense connexió?)")); return; }
+    const versio = String(r.versio).replace(/^v/, '');
+    const apk = r.apk ? { browser_download_url: r.apk } : null;
     if (!versioMesNova(versio, VERSIO) || !apk) { diu(T_('Ja tens la darrera versió ({v}).', { v: VERSIO })); return; }
     $('o-baixa').href = apk.browser_download_url; $('o-baixa').hidden = false;
     diu(T_('Hi ha la versió {v}. Baixa-la i instal·la-la per sobre: no es perd res.', { v: versio }));
