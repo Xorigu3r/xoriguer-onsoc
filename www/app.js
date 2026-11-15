@@ -1061,6 +1061,8 @@ function versioMesNova(a, b) { // a > b ?
 async function buscaActualitzacio(manual) {
   const res = $('o-versio-res');
   const diu = (t) => { if (manual) { res.textContent = t; res.hidden = false; } };
+  // app d'Android: s'actualitza sense reinstal·lar (xoriguer-actualitza.js)
+  if (window.XActualitza?.natiu) { await window.XActualitza.comprova(manual, (t) => { if (t || manual) diu(t); }); return; }
   if (!NATIU) {
     diu(T_("La web s'actualitza sola: quan l'obres amb connexió ja tens la darrera versió."));
     if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then((r) => r && r.update()).catch(() => {});
@@ -1202,6 +1204,7 @@ function pintaFamilia() {
   $('avis-iphone').hidden = !(IPHONE_WEB && !enllacGmaps(perfil.gmaps));
   $('versio').textContent = `Xoriguer On Sóc ${VERSIO} · ${NATIU ? PLATAFORMA : 'web'}`;
   $('o-versio-text').textContent = NATIU ? T_('Tens la versió {v}.', { v: VERSIO }) : T_('Versió web {v}.', { v: VERSIO });
+  window.XActualitza?.inicia({ app: 'onsoc', versio: VERSIO });
   buscaActualitzacio(false);
 }
 
